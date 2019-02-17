@@ -15,7 +15,22 @@ new Vue({
 	store,
 	created() {
 		this.$http.defaults.baseURL = process.env.VUE_APP_API_URL;
-		// this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+		const token = localStorage.getItem('token');
+		if (token) {
+			this.$http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+		}
+		this.$http.interceptors.response.use(
+			config => config,
+			error => {
+				if (error.response) {
+					if (error.response.status === 401) {
+						this.$router.push({ name: 'login' });
+						return Promise.reject('Erro de autenticação');
+					}
+					return Promise.reject(error.response);
+				}
+				return Promise.reject(error);
+			});
 	},
 	render: h => h(App)
 }).$mount('#app');

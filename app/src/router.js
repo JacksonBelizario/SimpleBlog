@@ -7,6 +7,7 @@ const router = new VueRouter({
 	routes: [
 		{
 			path: "/",
+			name: "home",
 			component: () => import("./containers/Home.vue"),
 			redirect: "/news",
 			children: [
@@ -25,6 +26,7 @@ const router = new VueRouter({
 		},
 		{
 			path: "/login",
+			name: "login",
 			component: () => import("./containers/Login.vue")
 		},
 		{
@@ -51,8 +53,18 @@ const router = new VueRouter({
 	]
 });
 
+
 router.beforeEach((to, from, next) => {
-  next();
+	if (to.matched.some(record => record.meta.requiresAuth)) {
+		const token = localStorage.getItem('token');
+		if (token) {
+			next();
+			return;
+		}
+		next({ name: 'login' });
+	} else {
+		next();
+	}
 });
 
 export default router;

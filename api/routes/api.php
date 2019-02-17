@@ -15,10 +15,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return "API";
 });
 
 Route::post('/login', 'AuthController@auth');
+
+Route::prefix('posts')->group(function () {
+    Route::get('/', 'PostsController@index');
+    Route::middleware('auth')->post('/', 'PostsController@store');
+    Route::middleware('auth')->put('/{id}', 'PostsController@update');
+    Route::middleware('auth')->get('/{id}', 'PostsController@show');
+    Route::middleware('auth')->delete('/{id}', 'PostsController@destroy');
+});
 
 Route::middleware('auth')->group(function () {
 
@@ -26,14 +34,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', function (Request $request) {
             return $request->user();
         });
-    });
-
-    Route::prefix('posts')->group(function () {
-        Route::get('/', 'PostsController@index');
-        Route::post('/', 'PostsController@store');
-        Route::put('/{id}', 'PostsController@update');
-        Route::get('/{id}', 'PostsController@show');
-        Route::delete('/{id}', 'PostsController@destroy');
     });
 
     Route::prefix('tags')->group(function () {

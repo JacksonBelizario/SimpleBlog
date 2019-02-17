@@ -9,14 +9,15 @@
 								<v-toolbar-title>Autenticação</v-toolbar-title>
 							</v-toolbar>
 							<v-card-text>
-								<v-form>
-									<v-text-field prepend-icon="person" name="login" label="Nome de usuário" type="text"></v-text-field>
-									<v-text-field id="password" prepend-icon="lock" name="password" label="Senha" type="password"></v-text-field>
+								<v-form v-model="valid">
+									<v-text-field v-model="form.email" prepend-icon="person" name="login" label="E-mail" type="text" :rules="emailRules" required></v-text-field>
+									<v-text-field v-model="form.password" id="password" prepend-icon="lock" name="password" label="Senha" type="password" :rules="passRules" required></v-text-field>
 								</v-form>
 							</v-card-text>
 							<v-card-actions>
+								Teste: admin@example.com | @dm1n
 								<v-spacer></v-spacer>
-								<v-btn color="primary">Entrar</v-btn>
+								<v-btn color="primary" :disabled="!valid" @click="auth">Entrar</v-btn>
 							</v-card-actions>
 						</v-card>
 					</v-flex>
@@ -29,11 +30,27 @@
 <script>
 	export default {
 		data: () => ({
-			drawer: null
+			valid: false,
+			form: {
+				email: '',
+				password: '',
+			},
+			emailRules: [
+				v => !!v || 'Informe o e-mail',
+				v => /.+@.+/.test(v) || 'Informe um e-mail válido'
+			],
+			passRules: [
+				v => !!v || 'Informe a senha'
+			],
 		}),
-
-		props: {
-			source: String
+		methods: {
+			auth() {
+				this.$http.post('/login', this.form).then(({data}) => {
+					localStorage.setItem('token', data.token);
+					this.$http.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+					this.$router.push({ name: 'dashboard' });
+				})
+			}
 		}
 	}
 </script>

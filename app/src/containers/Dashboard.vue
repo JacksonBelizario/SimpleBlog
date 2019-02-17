@@ -75,8 +75,8 @@
 				<span class="hidden-sm-and-down">Dashboard</span>
 			</v-toolbar-title>
 			<v-spacer></v-spacer>
-			<v-btn icon>
-				<v-icon>apps</v-icon>
+			<v-btn icon @click="logout">
+				<v-icon>exit_to_app</v-icon>
 			</v-btn>
 		</v-toolbar>
 		<v-content>
@@ -111,8 +111,12 @@
 				},
 			],
 		}),
-		props: {
-			source: String
+		methods: {
+			logout() {
+				localStorage.setItem('token', null);
+				this.$http.defaults.headers.common['Authorization'] = null;
+				this.$router.push({ name: 'news' });
+			}
 		}
 	};
 </script>
