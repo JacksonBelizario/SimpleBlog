@@ -27,4 +27,11 @@ class Posts extends Model
         return $this->hasOne('App\Models\Authors', "id", "author_id");
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(
+            'App\Models\Tags', 'post_tag', 'post_id', 'tag_id'
+        )->using('App\Models\Pivots\PostTag');
+    }
+
 }

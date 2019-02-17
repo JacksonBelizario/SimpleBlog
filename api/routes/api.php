@@ -28,5 +28,13 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('posts')->group(function () {
         Route::get('/', 'PostsController@index');
+        Route::post('/', 'PostsController@store');
+        Route::put('/{id}', 'PostsController@update');
+        Route::get('/{id}', 'PostsController@show');
+        Route::delete('/{id}', 'PostsController@destroy');
+    });
+
+    Route::prefix('tags')->group(function () {
+        Route::get('/', 'TagsController@index');
     });
 });

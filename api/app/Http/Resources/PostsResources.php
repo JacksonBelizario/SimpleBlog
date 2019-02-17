@@ -15,6 +15,7 @@ class PostsResources extends Resource
     public function toArray($request)
     {
         $request["author"] = $this->author;
+        $request["post_id"] = $this->tags;
         return parent::toArray($request);
     }
 }

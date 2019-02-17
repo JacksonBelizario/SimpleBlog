@@ -1,64 +1,53 @@
 <template>
-	<v-layout row>
-		<v-flex xs12>
-			<v-card>
+	<v-flex xs12>
+		<v-card v-for="post in posts" :key="post.id" :style="{marginBottom: '15px'}">
+			<v-img
+				:src="post.image"
+				height="130px"
+			>
+			</v-img>
 
-				<v-list three-line>
-					<template v-for="(item, index) in news">
-						<v-subheader
-							:key="item.header"
-							v-if="item.header"
-						>
-							{{ item.header }}
-						</v-subheader>
+			<v-card-title primary-title>
+				<div>
+					<div class="headline"><a @click="$router.push({ name: 'view', params: { id: post.id } })" >{{post.title}}</a>
+					</div>
+					<span class="grey--text">Tags</span>
+				</div>
+			</v-card-title>
 
-						<v-divider
-							:inset="item.inset"
-							:key="index"
-							v-else-if="item.divider"
-						></v-divider>
+			<v-card-actions>
+				<v-btn flat color="purple">Compartilhar</v-btn>
+				<v-spacer></v-spacer>
+				<v-btn icon @click="post.show = !post.show">
+					<v-icon>{{ !post.show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+				</v-btn>
+			</v-card-actions>
 
-						<v-list-tile
-							:key="item.title"
-							@click=""
-							avatar
-							v-else
-						>
-							<v-list-tile-avatar>
-								<img :src="item.image">
-							</v-list-tile-avatar>
-
-							<v-list-tile-content>
-								<v-list-tile-title>{{item.title}}</v-list-tile-title>
-								<v-list-tile-sub-title>{{item.date}} ({{item.timeago}})</v-list-tile-sub-title>
-							</v-list-tile-content>
-						</v-list-tile>
-					</template>
-				</v-list>
-			</v-card>
-		</v-flex>
-	</v-layout>
+			<v-slide-y-transition>
+				<v-card-text v-show="post.show">
+					{{post.body}}
+				</v-card-text>
+			</v-slide-y-transition>
+		</v-card>
+	</v-flex>
 </template>
-
 <script>
-	const BASE_URL = null;
 	export default {
-		data() {
-			return {
-				news: []
-			};
-		},
+		data: () => ({
+			posts: []
+		}),
 		methods: {
-			async getNews() {
-				const { data } = await this.axios.get(
-					`${BASE_URL}json/_app.php`
-				);
-
-				this.news = data.results;
+			getPosts() {
+				this.$http.get("posts").then(({data}) => {
+					this.posts = data.data.map(post => {
+						post.show = false;
+						return post;
+					});
+				})
 			}
 		},
 		created() {
-			this.getNews();
-		}
-	};
+			this.getPosts()
+		},
+	}
 </script>

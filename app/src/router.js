@@ -7,7 +7,21 @@ const router = new VueRouter({
 	routes: [
 		{
 			path: "/",
-			component: () => import("./containers/Blog.vue")
+			component: () => import("./containers/Home.vue"),
+			redirect: "/news",
+			children: [
+				{
+					path: '/news',
+					name: 'news',
+					component: () => import("./views/News.vue"),
+				},
+				{
+					path: '/view/:id',
+					name: 'view',
+					props: true,
+					component: () => import("./views/ViewNews.vue"),
+				},
+			]
 		},
 		{
 			path: "/login",
@@ -15,17 +29,22 @@ const router = new VueRouter({
 		},
 		{
 			path: "/dashboard",
-			name: "Dashboard",
+			name: "dashboard",
 			component: () => import(/* webpackChunkName: "dashboard" */ "./containers/Dashboard.vue"),
-			redirect: "/dashboard/noticias",
+			redirect: "/dashboard/posts",
 			meta: {
 				requiresAuth: true
 			},
 			children: [
 				{
-					path: '/dashboard/noticias',
-					name: 'noticias',
-					component: () => import(/* webpackChunkName: "news" */ "./views/News.vue"),
+					path: '/dashboard/posts',
+					name: 'dash-posts',
+					component: () => import("./views/DashNews.vue"),
+				},
+				{
+					path: '/dashboard/authors',
+					name: 'dash-authors',
+					component: () => import("./views/About.vue"),
 				},
 			]
 		},

@@ -74,28 +74,9 @@
 				<v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
 				<span class="hidden-sm-and-down">Dashboard</span>
 			</v-toolbar-title>
-			<v-text-field
-				class="hidden-sm-and-down"
-				flat
-				hide-details
-				label="Search"
-				prepend-inner-icon="search"
-				solo-inverted
-			></v-text-field>
 			<v-spacer></v-spacer>
 			<v-btn icon>
 				<v-icon>apps</v-icon>
-			</v-btn>
-			<v-btn icon>
-				<v-icon>notifications</v-icon>
-			</v-btn>
-			<v-btn icon large>
-				<v-avatar size="32px" tile>
-					<img
-						alt="Logo"
-						:src="require('../assets/logo.png')"
-					>
-				</v-avatar>
 			</v-btn>
 		</v-toolbar>
 		<v-content>
@@ -114,9 +95,19 @@
 			drawer: null,
 			items: [
 				{
-					icon: 'users',
-					text: 'Users',
-					to: 'users'
+					icon: 'home',
+					text: 'Início',
+					to: 'news'
+				},
+				{
+					icon: 'view_list',
+					text: 'Posts',
+					to: 'dash-posts'
+				},
+				{
+					icon: 'people',
+					text: 'Autores',
+					to: 'dash-authors'
 				},
 			],
 		}),
