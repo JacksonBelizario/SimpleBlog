@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Authors::class, 1)->create()->each(function (Authors $author) {
+        factory(Authors::class, 5)->create()->each(function (Authors $author) {
             $author->save();
         });
 

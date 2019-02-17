@@ -37,4 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('tags')->group(function () {
         Route::get('/', 'TagsController@index');
     });
+
+    Route::prefix('authors')->group(function () {
+        Route::get('/', 'AuthorsController@index');
+    });
 });

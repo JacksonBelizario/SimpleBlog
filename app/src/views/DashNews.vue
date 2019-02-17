@@ -22,13 +22,25 @@
 								<v-card-text>
 									<v-container grid-list-md>
 										<v-layout row wrap>
-											<v-flex xs12 align-center justify-space-between>
-												<v-layout align-center>
-													<v-text-field
-														v-model="editedItem.title"
-														label="Titulo"
-													></v-text-field>
-												</v-layout>
+											<v-flex xs8>
+												<v-select
+													:items="authors"
+													item-text="name"
+													item-value="id"
+													v-model="editedItem.author"
+													@input="(value) => { editedItem.author_id = value.id }"
+													label="Autor"
+													return-object
+												></v-select>
+											</v-flex>
+											<v-flex xs4>
+												<v-switch v-model="editedItem.published" label="Publicado"></v-switch>
+											</v-flex>
+											<v-flex xs12>
+												<v-text-field
+													v-model="editedItem.title"
+													label="Titulo"
+												></v-text-field>
 											</v-flex>
 											<v-flex xs12>
 												<v-text-field
@@ -60,7 +72,7 @@
 
 								<v-card-actions>
 									<v-spacer></v-spacer>
-									<v-btn color="blue darken-1" flat @click="close">Cancelar</v-btn>
+									<v-btn color="red darken-1" flat @click="close">Cancelar</v-btn>
 									<v-btn color="blue darken-1" flat @click="save">Salvar</v-btn>
 								</v-card-actions>
 							</v-card>
@@ -115,6 +127,7 @@
 				],
 				posts: [],
 				tags: [],
+				authors: [],
 				pages: 1,
 				pagination: {
 					page: 1,
@@ -129,6 +142,7 @@
 					title: "",
 					body: "",
 					image: "",
+					author: {},
 					author_id: 1,
 					published: true,
 					tags: [],
@@ -137,6 +151,7 @@
 					title: "",
 					body: "",
 					image: "",
+					author: {},
 					author_id: 1,
 					published: true,
 				}
@@ -144,14 +159,21 @@
 		},
 		computed: {
 			formTitle () {
-				return this.editedIndex === -1 ? 'Nova Postagem' : 'Editar Postagem'
+				return this.editedIndex === -1 ? 'Nova Postagem' : `Editar Postagem: ${this.posts[this.editedIndex].id}`
 			}
 		},
 		methods: {
+			getAuthors() {
+				this.$http.get("authors")
+					.then(({data}) => {
+						this.authors = data;
+						this.defaultItem.author = data[0];
+					})
+			},
+
 			getTags() {
 				this.$http.get("tags")
 					.then(({data}) => {
-						console.log('tags', data);
 						this.tags = data;
 					})
 			},
@@ -174,7 +196,14 @@
 
 			editItem (item) {
 				this.editedIndex = this.posts.indexOf(item);
-				this.editedItem = Object.assign({}, item);
+				// this.editedItem = Object.assign({}, item);
+				this.editedItem.title = item.title;
+				this.editedItem.body = item.body;
+				this.editedItem.image = item.image;
+				this.editedItem.author = item.author;
+				this.editedItem.author_id = item.author_id;
+				this.editedItem.published = item.published;
+				this.editedItem.tags = item.tags;
 				this.dialog = true
 			},
 
@@ -205,11 +234,11 @@
 				try {
 					if (this.editedIndex > -1) {
 						const id = this.posts[this.editedIndex].id;
-						const {data} = await this.$http.put(`posts/${id}`, this.editedItem);
-						Object.assign(this.posts[this.editedIndex], data)
+						await this.$http.put(`posts/${id}`, this.editedItem);
+						this.posts.splice(this.editedIndex, 1, this.editedItem);
 					} else {
-						const {data} = await this.$http.post("posts", this.editedItem);
-						this.posts.push(data);
+						await this.$http.post("posts", this.editedItem);
+						this.posts.push(this.editedItem);
 					}
 				} catch (err) {
 					console.warn(err);
@@ -223,6 +252,7 @@
 		created() {
 			this.paginate();
 			this.getTags();
+			this.getAuthors();
 		},
 
 		watch: {

@@ -33,6 +33,8 @@ class PostsController extends Controller
         $data = $request->all();
         $data["slug"] = Str::slug($data["title"]);
 
+        $post->tags()->sync(array_column($data["tags"], "id"));
+
         if ($post->fill($data)->save()) {
             return new PostsResources($post);
         }
@@ -53,7 +55,7 @@ class PostsController extends Controller
 
         $post = Posts::find($id);
 
-        $post->tags()->sync($data["tags"]);
+        $post->tags()->sync(array_column($data["tags"], "id"));
 
         if ($post->fill($data)->save()) {
             return new PostsResources($post);
