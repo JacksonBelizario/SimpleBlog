@@ -18,6 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('/login', 'AuthController@auth');
+
 Route::middleware('auth')->group(function () {
 
     Route::prefix('user')->group(function () {

@@ -8,15 +8,12 @@
 			</v-img>
 
 			<v-card-title primary-title>
-				<div>
+				<v-layout align-start justify-start column fill-height >
 					<div class="headline">{{post.title}}</div>
-					<span class="grey--text text-left">Tags</span>
-				</div>
+					<span><v-chip color="purple" text-color="white" v-for="tag in post.tags" :key="tag.id">{{tag.name}}</v-chip></span>
+				</v-layout>
 			</v-card-title>
 
-			<v-card-actions>
-				<v-btn flat color="purple">Compartilhar</v-btn>
-			</v-card-actions>
 			<v-card-text>
 				{{post.body}}
 			</v-card-text>
@@ -32,7 +29,8 @@
 		methods: {
 			showPost() {
 				this.$http.get(`posts/${this.id}`).then(({data}) => {
-					this.post = data;
+					console.log('post', data.data);
+					this.post = data.data;
 				})
 			}
 		},

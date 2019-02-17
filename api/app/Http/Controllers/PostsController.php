@@ -65,7 +65,7 @@ class PostsController extends Controller
 
     public function show($id)
     {
-        return Posts::find($id);
+        return new PostsResources(Posts::find($id));
     }
 
     public function destroy($id)

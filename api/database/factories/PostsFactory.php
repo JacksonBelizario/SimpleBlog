@@ -22,6 +22,6 @@ $factory->define(\App\Models\Posts::class, function (Faker $faker) {
         'body' => $faker->paragraphs(6, true),
         'image' => $faker->imageUrl(),
         'published' => true,
-        'author_id' => 1,
+        'author_id' => $faker->numberBetween(1, 3),
     ];
 });

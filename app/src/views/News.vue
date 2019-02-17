@@ -8,26 +8,12 @@
 			</v-img>
 
 			<v-card-title primary-title>
-				<div>
-					<div class="headline"><a @click="$router.push({ name: 'view', params: { id: post.id } })" >{{post.title}}</a>
+				<v-layout align-start justify-start column fill-height >
+					<div class="headline"><a class="black--text" @click="$router.push({ name: 'view', params: { id: post.id } })" >{{post.title}}</a>
 					</div>
-					<span class="grey--text">Tags</span>
-				</div>
+					<span><v-chip color="purple" text-color="white" v-for="tag in post.tags" :key="tag.id">{{tag.name}}</v-chip></span>
+				</v-layout>
 			</v-card-title>
-
-			<v-card-actions>
-				<v-btn flat color="purple">Compartilhar</v-btn>
-				<v-spacer></v-spacer>
-				<v-btn icon @click="post.show = !post.show">
-					<v-icon>{{ !post.show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-				</v-btn>
-			</v-card-actions>
-
-			<v-slide-y-transition>
-				<v-card-text v-show="post.show">
-					{{post.body}}
-				</v-card-text>
-			</v-slide-y-transition>
 		</v-card>
 	</v-flex>
 </template>

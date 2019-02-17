@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use \App\Models\Authors;
 use \App\Models\Posts;
 use \App\Models\Tags;
+use \App\Models\Users;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        factory(Authors::class, 5)->create()->each(function (Authors $author) {
+        factory(Users::class, 1)->create()->each(function (Users $user) {
+            $user->save();
+        });
+
+        factory(Authors::class, 3)->create()->each(function (Authors $author) {
             $author->save();
         });
 
