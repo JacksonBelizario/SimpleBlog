@@ -13,5 +13,9 @@ Vue.config.productionTip = false;
 new Vue({
 	router,
 	store,
-	render: h => h(App),
+	created() {
+		this.$http.defaults.baseURL = process.env.VUE_APP_API_URL;
+		// this.$http.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+	},
+	render: h => h(App)
 }).$mount('#app');

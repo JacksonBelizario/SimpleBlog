@@ -23,7 +23,7 @@ const router = new VueRouter({
 			},
 			children: [
 				{
-					path: '/noticias',
+					path: '/dashboard/noticias',
 					name: 'noticias',
 					component: () => import(/* webpackChunkName: "news" */ "./views/News.vue"),
 				},

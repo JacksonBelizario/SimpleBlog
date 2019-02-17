@@ -15,12 +15,12 @@
 						<v-list-tile-title>Home</v-list-tile-title>
 					</v-list-tile-content>
 				</v-list-tile>
-				<v-list-tile @click="">
+				<v-list-tile @click="$router.push('dashboard')">
 					<v-list-tile-action>
 						<v-icon>contact_mail</v-icon>
 					</v-list-tile-action>
 					<v-list-tile-content>
-						<v-list-tile-title>Contact</v-list-tile-title>
+						<v-list-tile-title>Painel Administrativo</v-list-tile-title>
 					</v-list-tile-content>
 				</v-list-tile>
 			</v-list>
@@ -82,11 +82,22 @@
 	export default {
 		data: () => ({
 			drawer: null,
-			show: false
+			show: false,
+			posts: []
 		}),
-
 		props: {
 			source: String
+		},
+		methods: {
+			getPosts() {
+				this.$http.get("posts").then(({data}) => {
+					console.log('posts', data);
+					this.posts = data;
+				})
+			}
+		},
+		created() {
+			this.getPosts()
 		}
 	}
 </script>
