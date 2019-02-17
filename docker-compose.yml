@@ -1,0 +1,50 @@
+version: "3"
+networks:
+  app_network:
+    driver: bridge
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: '12345'
+      MYSQL_DATABASE: 'dbname'
+      MYSQL_USER: 'dbadmin'
+      MYSQL_PASSWORD: 'dbpassword'
+    volumes:
+      - "./db_data:/var/lib/mysql"
+    networks:
+      - app_network
+  app:
+    environment:
+      DB_HOST: 'mysql'
+      DB_DATABASE: 'dbname'
+      DB_USERNAME: 'dbadmin'
+      DB_PASSWORD: 'dbpassword'
+      APP_NAME: 'Laravel'
+      APP_ENV: 'dev'
+      APP_DEBUG: 'true'
+      APP_URL: 'http://localhost'
+      APP_KEY: '234sfs3rt523fdg32567hv2345rhfc2e'
+      DB_CONNECTION: 'mysql'
+      TZ: 'America/Sao_Paulo'
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: jackson/app
+    container_name: app
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    networks:
+      - app_network
+    ports:
+      - "80:80"
+    volumes:
+      - "./:/var/www/html"
+    tty: true
+volumes:
+  db_data:
+    driver: "local"
