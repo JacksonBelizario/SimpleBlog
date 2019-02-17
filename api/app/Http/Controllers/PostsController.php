@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\PostsResources;
 use App\Models\Posts;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,7 @@ class PostsController extends Controller
 {
     public function index()
     {
-        return Posts::all();
+        return PostsResources::collection(Posts::all());
     }
 
     public function store(Request $request)
