@@ -34,18 +34,18 @@
 			<v-container fluid fill-height>
 				<v-layout justify-center align-center>
 					<v-flex text-xs-center>
-						<v-layout row>
+						<v-layout row >
 							<v-flex xs12>
-								<v-card>
+								<v-card v-for="post in posts" :key="post.id" :style="{marginBottom: '15px'}">
 									<v-img
-										src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+										:src="post.image"
 										height="130px"
 									>
 									</v-img>
 
 									<v-card-title primary-title>
 										<div>
-											<div class="headline">Top western road trips</div>
+											<div class="headline">{{post.title}}</div>
 											<span class="grey--text">1,000 miles of wonder</span>
 										</div>
 									</v-card-title>
@@ -54,14 +54,14 @@
 										<v-btn flat>Share</v-btn>
 										<v-btn flat color="purple">Explore</v-btn>
 										<v-spacer></v-spacer>
-										<v-btn icon @click="show = !show">
-											<v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+										<v-btn icon @click="post.show = !post.show">
+											<v-icon>{{ post.show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
 										</v-btn>
 									</v-card-actions>
 
 									<v-slide-y-transition>
-										<v-card-text v-show="show">
-											I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
+										<v-card-text v-show="post.show">
+											{{post.body}}
 										</v-card-text>
 									</v-slide-y-transition>
 								</v-card>
@@ -82,7 +82,6 @@
 	export default {
 		data: () => ({
 			drawer: null,
-			show: false,
 			posts: []
 		}),
 		props: {
@@ -92,7 +91,10 @@
 			getPosts() {
 				this.$http.get("posts").then(({data}) => {
 					console.log('posts', data);
-					this.posts = data;
+					this.posts = data.map(post => {
+						post.show = false;
+						return post;
+					});
 				})
 			}
 		},
