@@ -3,20 +3,53 @@ networks:
   app_network:
     driver: bridge
 services:
+  app:
+    build:
+      dockerfile: node.Dockerfile
+      context: .
+    image: jackson/app
+    container_name: app
+    depends_on:
+      - api
+    links:
+      - api
+    networks:
+      - app_network
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./app:/usr/app/
+      - /usr/app/node_modules
   mysql:
     image: mysql:5.7
     container_name: mysql
     restart: always
+    volumes:
+      - "./db_data:/var/lib/mysql"
+    networks:
+      - app_network
     environment:
       MYSQL_ROOT_PASSWORD: '12345'
       MYSQL_DATABASE: 'dbname'
       MYSQL_USER: 'dbadmin'
       MYSQL_PASSWORD: 'dbpassword'
-    volumes:
-      - "./db_data:/var/lib/mysql"
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: jackson/api
+    container_name: api
+    depends_on:
+      - mysql
+    links:
+      - mysql
     networks:
       - app_network
-  app:
+    ports:
+      - "8081:80"
+    volumes:
+      - "./api:/var/www/api"
+    tty: true
     environment:
       DB_HOST: 'mysql'
       DB_DATABASE: 'dbname'
@@ -29,22 +62,6 @@ services:
       APP_KEY: '234sfs3rt523fdg32567hv2345rhfc2e'
       DB_CONNECTION: 'mysql'
       TZ: 'America/Sao_Paulo'
-    build:
-      dockerfile: Dockerfile
-      context: .
-    image: jackson/app
-    container_name: app
-    depends_on:
-      - mysql
-    links:
-      - mysql
-    networks:
-      - app_network
-    ports:
-      - "80:80"
-    volumes:
-      - "./:/var/www/html"
-    tty: true
 volumes:
   db_data:
     driver: "local"

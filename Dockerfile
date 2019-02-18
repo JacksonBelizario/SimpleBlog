@@ -6,19 +6,19 @@ RUN a2enmod rewrite
 # Enable apache mod ssl..
 RUN a2enmod ssl
 
-# Enable default site
-COPY ./.deploy/000-default.conf /etc/apache2/sites-available/000-default.conf
-
-RUN service apache2 start
 RUN chown -R www-data:www-data /var/www/html
 VOLUME /var/www/html
 
 WORKDIR /var/www/html
-ADD . /var/www/html
+ADD api /var/www/html
 
-RUN chmod -R 775 /var/www/html/api/storage
+# Enable default site
+COPY ./.deploy/000-default.conf /etc/apache2/sites-available/000-default.conf
+RUN service apache2 start
+
+RUN chmod -R 775 /var/www/html/storage
 
 # Run composer
-RUN cd /var/www/html/api && composer install --prefer-dist --no-dev --no-scripts --no-suggest
+RUN cd /var/www/html && composer install --prefer-dist --no-dev --no-scripts --no-suggest
 
 CMD /usr/sbin/apache2ctl -D FOREGROUND
