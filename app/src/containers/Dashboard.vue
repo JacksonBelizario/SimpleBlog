@@ -103,12 +103,7 @@
 					icon: 'view_list',
 					text: 'Posts',
 					to: 'dash-posts'
-				},
-				{
-					icon: 'people',
-					text: 'Autores',
-					to: 'dash-authors'
-				},
+				}
 			],
 		}),
 		methods: {

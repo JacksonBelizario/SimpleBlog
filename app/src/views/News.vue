@@ -33,7 +33,7 @@
 			}
 		},
 		created() {
-			this.getPosts()
+			this.getPosts();
 		},
 	}
 </script>

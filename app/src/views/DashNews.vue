@@ -179,7 +179,7 @@
 			},
 
 			getPosts(page) {
-				this.$http.get("posts", {params: { page }})
+				this.$http.get("posts/all", {params: { page }})
 					.then(({data}) => {
 						if (page === 1) {
 							this.pagination.page = page;
@@ -217,8 +217,8 @@
 					const id = this.posts[index].id;
 					await this.$http.delete(`posts/${id}`);
 					this.posts.splice(index, 1)
-				} catch (err) {
-					console.warn(err);
+				} catch ({data}) {
+					this.$root.error(data.message);
 				}
 			},
 
@@ -240,8 +240,8 @@
 						await this.$http.post("posts", this.editedItem);
 						this.posts.push(this.editedItem);
 					}
-				} catch (err) {
-					console.warn(err);
+				} catch ({data}) {
+					this.$root.error(data.message);
 				}
 				this.close()
 			},

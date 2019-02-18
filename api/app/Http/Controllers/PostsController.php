@@ -18,6 +18,11 @@ class PostsController extends Controller
 {
     public function index()
     {
+        return PostsResources::collection(Posts::where("published", 1)->get());
+    }
+
+    public function dashIndex()
+    {
         return PostsResources::collection(Posts::paginate());
     }
 

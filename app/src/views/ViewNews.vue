@@ -29,7 +29,6 @@
 		methods: {
 			showPost() {
 				this.$http.get(`posts/${this.id}`).then(({data}) => {
-					console.log('post', data.data);
 					this.post = data.data;
 				})
 			}

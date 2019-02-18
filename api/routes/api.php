@@ -22,9 +22,10 @@ Route::post('/login', 'AuthController@auth');
 
 Route::prefix('posts')->group(function () {
     Route::get('/', 'PostsController@index');
+    Route::middleware('auth')->get('/all', 'PostsController@dashIndex');
     Route::middleware('auth')->post('/', 'PostsController@store');
     Route::middleware('auth')->put('/{id}', 'PostsController@update');
-    Route::middleware('auth')->get('/{id}', 'PostsController@show');
+    Route::get('/{id}', 'PostsController@show');
     Route::middleware('auth')->delete('/{id}', 'PostsController@destroy');
 });
 

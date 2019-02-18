@@ -15,7 +15,7 @@
 								</v-form>
 							</v-card-text>
 							<v-card-actions>
-								Teste: admin@example.com | @dm1n
+								Login: admin@example.com | @dm1n
 								<v-spacer></v-spacer>
 								<v-btn color="primary" :disabled="!valid" @click="auth">Entrar</v-btn>
 							</v-card-actions>
@@ -49,6 +49,8 @@
 					localStorage.setItem('token', data.token);
 					this.$http.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 					this.$router.push({ name: 'dashboard' });
+				}).catch(({data}) => {
+					this.$root.error(data.message);
 				})
 			}
 		}

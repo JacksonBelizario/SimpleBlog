@@ -25,7 +25,13 @@ new Vue({
 				if (error.response) {
 					if (error.response.status === 401) {
 						this.$router.push({ name: 'login' });
-						return Promise.reject('Erro de autenticação');
+						error.response.data.message = 'Erro de autenticação';
+					}
+					if (error.response.status === 422) {
+						const erros = (typeof error.response.data === 'object')
+							? Object.keys(error.response.data.errors).map(item => `<b>${item}:</b> ${error.response.data.errors[item][0]}`)
+							: [JSON.stringify(error.response.data)];
+						error.response.data.message = erros.join("<br>");
 					}
 					return Promise.reject(error.response);
 				}
