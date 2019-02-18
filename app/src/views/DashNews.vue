@@ -216,7 +216,8 @@
 				try {
 					const id = this.posts[index].id;
 					await this.$http.delete(`posts/${id}`);
-					this.posts.splice(index, 1)
+					this.posts.splice(index, 1);
+					this.$root.success("Deletado com sucesso");
 				} catch ({data}) {
 					this.$root.error(data.message);
 				}
@@ -236,9 +237,11 @@
 						const id = this.posts[this.editedIndex].id;
 						await this.$http.put(`posts/${id}`, this.editedItem);
 						this.posts.splice(this.editedIndex, 1, this.editedItem);
+						this.$root.success("Postagem Salva");
 					} else {
 						await this.$http.post("posts", this.editedItem);
 						this.posts.push(this.editedItem);
+						this.$root.success("Postagem Salva");
 					}
 				} catch ({data}) {
 					this.$root.error(data.message);

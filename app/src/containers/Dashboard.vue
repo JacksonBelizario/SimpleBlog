@@ -108,7 +108,7 @@
 		}),
 		methods: {
 			logout() {
-				localStorage.setItem('token', null);
+				localStorage.removeItem('token');
 				this.$http.defaults.headers.common['Authorization'] = null;
 				this.$router.push({ name: 'news' });
 			}
