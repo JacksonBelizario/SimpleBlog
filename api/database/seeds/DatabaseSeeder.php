@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         });
 
         factory(Posts::class, 5)->create()->each(function (Posts $post) {
-            $post->tags()->sync(array_rand([1,2,3,4,5], 2));
+            $post->tags()->sync(([rand(1, 5), rand(1, 5)]));
             $post->save();
         });
     }
