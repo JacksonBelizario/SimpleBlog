@@ -2,7 +2,7 @@
 ```
 Projeto com Vue.js / Laravel
 ```
-##Como efetuar o deploy:
+## Como efetuar o deploy:
 
 ### Inicie o container
 ```
