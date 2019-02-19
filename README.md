@@ -1,16 +1,25 @@
 # Blog
-Como efetuar o deploy:
+```
+Projeto com Vue.js / Laravel
+```
+##Como efetuar o deploy:
 
-## Inicie o container
+### Inicie o container
 ```
 docker-compose -f docker-compose.yml up -d
 ```
 
 ### Inicialize o Banco de Dados
 ```
-docker-compose exec app php artisan migrate --seed
+docker-compose exec api php artisan migrate --seed
 ```
 
-### Acesse o projeto
+#### APP
 [localhost:8080](http://localhost:8080)
+
+#### Login
+[localhost:8080/#/login](http://localhost:8080/#/login)
+
+#### Painel Administrativo
+[localhost:8080/#/dashboard](http://localhost:8080/#/dashboard)
 

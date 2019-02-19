@@ -107,7 +107,7 @@
 						</template>
 					</v-data-table>
 					<div class="text-xs-center pt-2">
-						<v-pagination v-model="pagination.page" @input="paginate" :length="pages"></v-pagination>
+						<v-pagination v-model="pagination.page" :length="pages"></v-pagination>
 					</div>
 				</v-list>
 			</v-card>
@@ -128,13 +128,11 @@
 				posts: [],
 				tags: [],
 				authors: [],
-				pages: 1,
 				pagination: {
 					page: 1,
 					per_page: 15,
 					sortBy: 'id',
 					descending: true,
-					tags: [],
 				},
 				dialog: false,
 				editedIndex: -1,
@@ -160,6 +158,13 @@
 		computed: {
 			formTitle () {
 				return this.editedIndex === -1 ? 'Nova Postagem' : `Editar Postagem: ${this.posts[this.editedIndex].id}`
+			},
+			pages () {
+				if (this.pagination.rowsPerPage == null ||
+					this.pagination.totalItems == null
+				) return 0;
+
+				return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
 			}
 		},
 		methods: {
@@ -178,15 +183,10 @@
 					})
 			},
 
-			getPosts(page) {
-				this.$http.get("posts/all", {params: { page }})
+			getPosts() {
+				this.$http.get("posts/all")
 					.then(({data}) => {
-						if (page === 1) {
-							this.pagination.page = page;
-							this.pages = data.meta.last_page;
-							this.pagination.rowsPerPage = data.meta.per_page;
-							this.pagination.totalItems = data.meta.total;
-						}
+						this.pagination.totalItems = data.data.length;
 						this.posts = data.data.map(post => {
 							post.show = false;
 							return post;
@@ -218,6 +218,7 @@
 					await this.$http.delete(`posts/${id}`);
 					this.posts.splice(index, 1);
 					this.$root.success("Deletado com sucesso");
+					this.pagination.totalItems--;
 				} catch ({data}) {
 					this.$root.error(data.message);
 				}
@@ -232,28 +233,29 @@
 			},
 
 			async save () {
+				let item = this.editedItem;
 				try {
 					if (this.editedIndex > -1) {
 						const id = this.posts[this.editedIndex].id;
-						await this.$http.put(`posts/${id}`, this.editedItem);
-						this.posts.splice(this.editedIndex, 1, this.editedItem);
+						await this.$http.put(`posts/${id}`, item);
+						item.id = id;
+						this.posts.splice(this.editedIndex, 1, item);
 						this.$root.success("Postagem Salva");
 					} else {
-						await this.$http.post("posts", this.editedItem);
-						this.posts.push(this.editedItem);
+						const {data} = await this.$http.post("posts", item);
+						item.id = data.id;
+						this.posts.push(item);
 						this.$root.success("Postagem Salva");
+						this.pagination.totalItems++;
 					}
 				} catch ({data}) {
 					this.$root.error(data.message);
 				}
 				this.close()
-			},
-			paginate() {
-				this.getPosts(this.pagination.page);
 			}
 		},
 		created() {
-			this.paginate();
+			this.getPosts();
 			this.getTags();
 			this.getAuthors();
 		},

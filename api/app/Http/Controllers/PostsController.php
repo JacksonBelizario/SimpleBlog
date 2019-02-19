@@ -23,7 +23,7 @@ class PostsController extends Controller
 
     public function dashIndex()
     {
-        return PostsResources::collection(Posts::paginate());
+        return PostsResources::collection(Posts::all());
     }
 
     public function store(Request $request, Posts $post)
