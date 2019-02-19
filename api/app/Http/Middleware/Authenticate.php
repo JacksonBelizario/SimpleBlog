@@ -24,6 +24,10 @@ class Authenticate extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
+        if (env("APP_ENV") === "testing") {
+            return $next($request);
+        }
+
         $token = $request->bearerToken();
 
         if (!$token) {
