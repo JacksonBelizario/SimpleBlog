@@ -16,10 +16,11 @@ services:
     networks:
       - app_network
     ports:
-      - "8080:3000"
+      - "8080:8080"
     volumes:
-      - ./app:/usr/app/
-      - /usr/app/node_modules
+      - ./app:/app/
+      - /app/node_modules
+      - /app/dist
   mysql:
     image: mysql:5.7
     container_name: mysql

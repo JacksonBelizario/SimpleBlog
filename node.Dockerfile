@@ -1,10 +1,19 @@
 FROM node:lts-slim
 
-WORKDIR /usr/app
-ADD app /usr/app
+# instala um servidor http simples para servir conteúdo estático
+RUN npm install -g http-server
 
-RUN yarn && yarn build
+# faz da pasta 'app' o diretório atual de trabalho
+WORKDIR /app
 
-CMD [ "node", "serve.js" ]
+# copia os arquivos 'package.json' e 'package-lock.json' (se disponível)
+ADD app ./
 
-EXPOSE 80
+# instala dependências do projeto
+RUN yarn
+
+# compila a aplicação de produção com minificação
+RUN npm run build
+
+EXPOSE 8080
+CMD [ "http-server", "dist" ]
