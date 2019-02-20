@@ -6,10 +6,13 @@ Projeto com Vue.js / Laravel
 
 ### Inicie o container
 ```
-docker-compose -f docker-compose.yml up -d
+docker-compose up -d --build
 ```
-
-### Inicialize o Banco de Dados
+### Instale as dependências
+```
+docker-compose exec api composer install
+```
+### Inicialize o Banco de Dados (Com dados de exemplo)
 ```
 docker-compose exec api php artisan migrate --seed
 ```

@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 networks:
   app_network:
     driver: bridge
@@ -9,8 +9,6 @@ services:
       context: .
     image: jackson/app
     container_name: app
-    depends_on:
-      - api
     links:
       - api
     networks:
@@ -40,8 +38,6 @@ services:
       context: .
     image: jackson/api
     container_name: api
-    depends_on:
-      - mysql
     links:
       - mysql
     networks:
@@ -49,8 +45,8 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - "./api:/var/www/html/api"
-    working_dir: "/var/www/html/api"
+      - ./api:/var/www/html
+    working_dir: "/var/www/html"
     tty: true
     environment:
       DB_HOST: 'mysql'
