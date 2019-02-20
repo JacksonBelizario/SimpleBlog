@@ -36,7 +36,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    image: jackson/api
+    image: jackson/api2
     container_name: api
     links:
       - mysql
@@ -45,8 +45,9 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - ./api:/var/www/html
-    working_dir: "/var/www/html"
+      - ./api:/var/www/html/api
+      - ./api/storage:/var/www/html/api/storage
+    working_dir: "/var/www/html/api"
     tty: true
     environment:
       DB_HOST: 'mysql'

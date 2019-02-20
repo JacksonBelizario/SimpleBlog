@@ -9,11 +9,14 @@ RUN a2enmod ssl
 # Enable default site
 COPY ./.deploy/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-VOLUME /var/www/html /var/www/html/storage
+VOLUME /var/www/html/api /var/www/html/api/storage
 
-RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html/storage
+WORKDIR /var/www/html/api
+COPY ./api ./
 
-WORKDIR /var/www/html
+RUN chown -R www-data:www-data /var/www/html/api && chmod -R 775 /var/www/html/api/storage
+
+RUN rm -rf /var/www/html/api/storage/logs/*
 
 EXPOSE 80
 
